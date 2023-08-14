@@ -19,7 +19,7 @@ while True:
 
         print("Erkannter Satz: " + recognized_sentence)
 
-        if "assistent" in recognized_sentence.lower():
+        if "assisten" in recognized_sentence.lower():
             print("Ich fühle mich angesprochen.")
     except sr.UnknownValueError:
         print("Dies konnte nicht verstanden werden.")
