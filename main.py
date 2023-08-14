@@ -8,7 +8,7 @@ while True:
 
     # obtain audio from the microphone
     r = sr.Recognizer()
-    with sr.Microphone() as source:
+    with noalsaerr() as n, sr.Microphone() as source:
         print("Warte auf Frage..")
         audio = r.listen(source)
 
