@@ -17,7 +17,7 @@ while True:
     try:
         recognized_sentence = r.recognize_google(audio, language="de-DE")
 
-        print("Erkannter Satz: " + recognize_google)
+        print("Erkannter Satz: " + recognized_sentence)
 
         if "assistent" in recognized_sentence.lower():
             print("Ich fühle mich angesprochen.")
