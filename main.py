@@ -1,9 +1,21 @@
+#!/usr/bin/env python3
+
+# NOTE: this example requires PyAudio because it uses the Microphone class
+
 import speech_recognition as sr
 
+# obtain audio from the microphone
+r = sr.Recognizer()
 with sr.Microphone() as source:
-    # read the audio data from the default microphone
-    audio_data = sr.record(source, duration=5)
-    print("Recognizing...")
-    # convert speech to text
-    text = sr.recognize_google(audio_data, language="de-DE")
-    print(text)
+    print("Say something!")
+    audio = r.listen(source)
+
+try:
+    # for testing purposes, we're just using the default API key
+    # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
+    # instead of `r.recognize_google(audio)`
+    print("Google Speech Recognition thinks you said " + r.recognize_google(audio, language="de-DE"))
+except sr.UnknownValueError:
+    print("Google Speech Recognition could not understand audio")
+except sr.RequestError as e:
+    print("Could not request results from Google Speech Recognition service; {0}".format(e))
