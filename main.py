@@ -21,7 +21,9 @@ while True:
 
         if "assisten" in recognized_sentence.lower():
             print("Ich fühle mich angesprochen.")
-    except sr.UnknownValueError:
+    except sr.UnknownValueError as u:
+        print(u)
         print("Dies konnte nicht verstanden werden.")
     except sr.RequestError as e:
+        print(e)
         print("Dies konnte nicht verarbeitet werden.")
