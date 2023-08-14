@@ -15,7 +15,7 @@ while True:
         audio = r.listen(source)
 
     try:
-        recognized_sentence = r.recognize_sphinx(audio, language="de-DE")
+        recognized_sentence = r.recognize_google(audio, language="de-DE")
 
         print("Erkannter Satz: " + recognized_sentence)
 
