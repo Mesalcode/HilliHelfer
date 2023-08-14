@@ -15,7 +15,12 @@ while True:
         audio = r.listen(source)
 
     try:
-        print("Erkannter Satz: " + r.recognize_google(audio, language="de-DE"))
+        recognized_sentence = r.recognize_google(audio, language="de-DE")
+
+        print("Erkannter Satz: " + recognize_google)
+
+        if "assistent" in recognized_sentence.lower():
+            print("Ich fühle mich angesprochen.")
     except sr.UnknownValueError:
         print("Dies konnte nicht verstanden werden.")
     except sr.RequestError as e:
