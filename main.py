@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-# NOTE: this example requires PyAudio because it uses the Microphone class
+import thorsten
 
-#import thorsten
-
-#thorsten.say("Guten Morgen! Ich bin Thomas Hillebrand. Brauchst du mit etwas Hilfe? Sag einfach Bescheid!")
+thorsten.say("Guten Morgen! Ich bin dein Assistent. Brauchst du mit etwas Hilfe? Sag einfach Bescheid!")
 
 import voice_recognition
 
