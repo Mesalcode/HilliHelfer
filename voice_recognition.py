@@ -8,7 +8,7 @@ async def main():
     page = await browser.newPage()
     await page.goto('https://translate.google.com')
 
-    cookie_btn = await page.Jx('//button[contains(text(), "Alles akzeptieren")]')
+    cookie_btn = await page.Jx('//button[contains(text(), "Alle akzeptieren")]')
 
     await page.waitForNavigation()
     await page.waitForSelector('#i9 > span.VfPpkd-YVzG2b')
