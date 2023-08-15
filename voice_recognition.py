@@ -12,6 +12,8 @@ async def main():
 
     cookie_btn = await page.Jx('//button[contains(text(), "Alle akzeptieren")]')
 
+    print(cookie_btn)
+
     await cookie_btn.click()
 
     await page.waitForNavigation()
