@@ -7,8 +7,9 @@ async def main():
     browser = await launch({'headless': False, 'args': [ '--use-fake-ui-for-media-stream' ]})
     page = await browser.newPage()
     await page.goto('https://translate.google.com')
-    await page.waitForSelector('#yDmH0d > c-wiz > div > div > div > div.NIoIEf > div.G4njw > div.AIC7ge > div.CxJub > div.VtwTSb > form:nth-child(2) > div > div > button > div.VfPpkd-RLmnJb');
-    await page.click('#yDmH0d > c-wiz > div > div > div > div.NIoIEf > div.G4njw > div.AIC7ge > div.CxJub > div.VtwTSb > form:nth-child(2) > div > div > button > div.VfPpkd-RLmnJb');
+
+    cookie_btn = await page.Jx('//button[contains(text(), "Alles akzeptieren")]')
+
     await page.waitForNavigation()
     await page.waitForSelector('#i9 > span.VfPpkd-YVzG2b')
     await page.click('#i9 > span.VfPpkd-YVzG2b')
