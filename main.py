@@ -2,6 +2,14 @@
 
 # NOTE: this example requires PyAudio because it uses the Microphone class
 
+#import thorsten
+
+#thorsten.say("Guten Morgen! Ich bin Thomas Hillebrand. Brauchst du mit etwas Hilfe? Sag einfach Bescheid!")
+
+import voice_recognition
+
+exit(0)
+
 import sounddevice
 
 import speech_recognition as sr
