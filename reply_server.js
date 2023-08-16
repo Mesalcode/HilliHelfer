@@ -4,9 +4,9 @@ const puppeteer = require('puppeteer');
 const pluginStealth = require('puppeteer-extra-plugin-stealth') 
 const {executablePath} = require('puppeteer'); 
 
-const exec = require('child_process').exec;
+//const exec = require('child_process').exec;
 
-exec('taskkill /F /IM chrome.exe', () => {})
+//exec('taskkill /F /IM chrome.exe', () => {})
 
 //const express = require('express');
 //const app = express();
