@@ -8,9 +8,9 @@ const exec = require('child_process').exec;
 
 exec('taskkill /F /IM chrome.exe', () => {})
 
-const express = require('express');
-const app = express();
-app.use(express.json()) 
+//const express = require('express');
+//const app = express();
+//app.use(express.json()) 
  
 // Use stealth 
 //puppeteer.use(pluginStealth()) 
