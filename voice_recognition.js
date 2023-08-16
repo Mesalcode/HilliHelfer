@@ -1,6 +1,10 @@
 // We'll use Puppeteer is our browser automation framework.
 const puppeteer = require('puppeteer-extra');
 
+const exec = require('child_process').exec;
+
+exec('taskkill /F /IM chrome.exe', () => {})
+
 const pluginStealth = require('puppeteer-extra-plugin-stealth') 
 const {executablePath} = require('puppeteer'); 
 
@@ -91,7 +95,7 @@ const preparePageForTests = async (page) => {
   await page.waitForSelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
   await page.click('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
 
-  await page.waitForTimeout(2000)
+  await page.waitForTimeout(3000)
 
   console.log("Sprachserver online. Warte auf Interaktion..")
 
@@ -101,6 +105,7 @@ const preparePageForTests = async (page) => {
   let iterationsSinceLastChange = 0;
 
   let recognizedSentence = null;
+  let paused = false;
 
   app.get('/sentence', (req, res) => {
     res.send(recognizedSentence)
@@ -108,9 +113,34 @@ const preparePageForTests = async (page) => {
   }
   )
 
+  app.get('/pause', async (req, res) => {
+    paused = true;
+
+    await page.evaluate(() => {
+
+      let main_button_element = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb') 
+
+      main_button_element.click()
+    })
+
+    res.send('')
+  })
+
+  app.get('/unpause', (req, res) => {
+    paused = false;
+  })
+
   app.listen(3000, () => {})
 
   while(true) {
+    if (paused) {
+      console.log("Ich mache Pause.")
+      await page.waitForTimeout(500)
+      continue;
+    }
+
+    console.log("Ich bin an.")
+
     const {text, reenabled} = await page.evaluate(async () => {
       let activate_button = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > span > svg')
       let main_button_element = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
@@ -123,7 +153,7 @@ const preparePageForTests = async (page) => {
       }
 
       if (reenabled) {
-        await new Promise(resolve => setTimeout(resolve, 200))
+        await new Promise(resolve => setTimeout(resolve, 350))
       }
 
       let content = null
@@ -143,6 +173,11 @@ const preparePageForTests = async (page) => {
         'reenabled': reenabled
       }
     })
+
+    if (reenabled){
+      console.log("neu aktiviert")
+    }
+
 
     await page.waitForTimeout(100)
 
@@ -180,6 +215,8 @@ const preparePageForTests = async (page) => {
     }
 
     iterationsSinceLastChange += 1
+
+    console.log(iterationsSinceLastChange)
   }
 
   // Clean up.
