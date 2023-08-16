@@ -49,10 +49,10 @@ def say(text, notify_others=False):
 
 say("Alle Systeme werden vor dem Start überprüft. Bitte haben Sie etwas Geduld.")
 
+say("Sprachausgabedienst bereit für den Einsatz.")
+
 while True:
     try:
-        print("vordere ")
-
         status = requests.get('http://localhost:3000/status').status_code
         
         if status == 200:
@@ -63,17 +63,44 @@ while True:
     except:
         say("Warte auf Spracherkennungsdienst")
 
+say("Spracherkennungsdienst bereit für den Einsatz.")
+
+while True:
+    try:
+        status = requests.get('http://localhost:3002/status').status_code
+        
+        if status == 200:
+            break   
+
+        say("Der Kommunikationsdienst ist nicht mehr erreichbar. Fahre herunter.")
+        exit(1)
+    except:
+        say("Warte auf Kommunikationsdienst")
+
+say("Kommunikationsdienst bereit für den Einsatz.")
+
+say("Starte Hilli punkt echse")
+
+time.sleep(5)
+
 say("Guten Tag! Ich bin Thomas Hillebrand, Gymnasiallehrer aus dem steinreichen Lindlar und freue mich mit dir zu reden.")
 
 while True:
     try:
         time.sleep(0.3)
 
+        print("sending request")
+
         sentence = requests.get('http://localhost:3000/sentence').text
         sentence_trimmed = sentence.strip()
 
+        print(sentence)
+
+
         if len(sentence_trimmed) == 0:
             continue
+
+        print(f"Erkannte Sprache: {sentence_trimmed}")
 
         lower_case_sentence = sentence_trimmed.lower()
         thomas_index = lower_case_sentence.find("thomas")
@@ -87,10 +114,15 @@ while True:
         if len(trimmed_thomas_sentence) == 0:
             continue
 
-        print(thomas_sentence)
+        print(f"Looking for response to {trimmed_thomas_sentence}")
 
-        say(thomas_sentence, notify_others=True)
+        reply = requests.post('http://localhost:3002/get_response', json={'query': trimmed_thomas_sentence}).text
 
-    except:
+        say(reply, notify_others=True)
+    except Exception as e:
+        print(e)
+
         say("Der Spracherkennungsdienst ist nicht mehr erreichbar. Fahre herunter.")
         exit(1)
+
+# TODO: Spracherkennung sendet Hardware signal für lampe

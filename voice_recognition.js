@@ -1,9 +1,9 @@
 // We'll use Puppeteer is our browser automation framework.
 const puppeteer = require('puppeteer-extra');
 
-const exec = require('child_process').exec;
+//const exec = require('child_process').exec;
 
-exec('taskkill /F /IM chrome.exe', () => {})
+//exec('taskkill /F /IM chrome.exe', () => {})
 
 const pluginStealth = require('puppeteer-extra-plugin-stealth') 
 const {executablePath} = require('puppeteer'); 
@@ -70,27 +70,34 @@ const preparePageForTests = async (page) => {
   // Launch the browser in headless mode and set up a page.
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--use-fake-ui-for-media-stream'],
-    headless: 'new',
+    headless: false,
   });
   const page = await browser.newPage();
+  
 
   // Prepare for the tests (not yet implemented).
   
-
+  console.log("hier -1")
   // Navigate to the page that will perform the tests.
   const testUrl = 'https://translate.google.com/?sl=de&tl=es&op=translate';
   await page.goto(testUrl);
+  //await page.setBypassCSP(true);
 
-  await preparePageForTests(page);
+  //await preparePageForTests(page);
 
-  await page.waitForSelector('#yDmH0d > c-wiz > div > div > div > div.NIoIEf > div.G4njw > div.AIC7ge > div.CxJub > div.VtwTSb > form:nth-child(2) > div > div > button > span')
-  await page.click('#yDmH0d > c-wiz > div > div > div > div.NIoIEf > div.G4njw > div.AIC7ge > div.CxJub > div.VtwTSb > form:nth-child(2) > div > div > button > span')
+  await page.waitForSelector('#yDmH0d > c-wiz > div > div > div > div.NIoIEf > div.G4njw > div.AIC7ge > div.CxJub > div.VtwTSb > form:nth-child(2) > div > div > button > div.VfPpkd-RLmnJb')
+  await page.click('#yDmH0d > c-wiz > div > div > div > div.NIoIEf > div.G4njw > div.AIC7ge > div.CxJub > div.VtwTSb > form:nth-child(2) > div > div > button > div.VfPpkd-RLmnJb')
+
+  console.log("hier 0")
 
   await page.waitForNavigation()
+  await page.setBypassCSP(true);
 
-  await preparePageForTests(page);
+  await preparePageForTests(page)
 
   await page.waitForTimeout(2000)
+
+  console.log("hier 1")
 
   await page.waitForSelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
   await page.click('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')

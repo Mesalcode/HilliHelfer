@@ -1,19 +1,22 @@
 // We'll use Puppeteer is our browser automation framework.
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
 
-const pluginStealth = require('puppeteer-extra-plugin-stealth') 
+const PluginStealth = require('puppeteer-extra-plugin-stealth') 
 const {executablePath} = require('puppeteer'); 
 
-//const exec = require('child_process').exec;
+const exec = require('child_process').exec;
 
-//exec('taskkill /F /IM chrome.exe', () => {})
+exec('taskkill /F /IM chrome.exe', () => {})
 
-//const express = require('express');
-//const app = express();
-//app.use(express.json()) 
+const express = require('express');
+const app = express();
+app.use(express.json()) ;
  
+const pluginStealth = PluginStealth()
+
+pluginStealth.enabledEvasions.delete('accept-language')
 // Use stealth 
-//puppeteer.use(pluginStealth()) 
+puppeteer.use(pluginStealth);
 
 // This is where we'll put the code to get around the tests.
 
@@ -58,7 +61,25 @@ const {executablePath} = require('puppeteer');
 
   await page.waitForNavigation()
 
-    await page.waitForTimeout(3000)
+  await page.setRequestInterception(true);
+
+  page.removeAllListeners('response')
+
+  page.on('response', async(response) => {
+    try {
+      console.log("finished")
+
+      const request = response.request();
+  
+          const text = await response.text();
+          console.log(text);
+    } catch (_) {}
+
+    
+})
+
+
+  await page.waitForTimeout(3000)
 
   //await preparePageForTests(page)
 
@@ -77,23 +98,24 @@ const {executablePath} = require('puppeteer');
   
   await page.waitForTimeout(5000)
 
-  await page.setRequestInterception(true);
 
-  input_field = await page.waitForSelector('#user-input')
-  await input_field.type('Was machst du beruflich?')
-
-  await page.waitForSelector('#send-btn-icon')
-  await page.click('#send-btn-icon')
-
-  app.post('/get_reply', async (req, res) => {
-    query = req.body
 
 
 
-    await page.evaluate(textToEnter => {
-      document.querySelector("#user-input").innerHTML = textToEnter
-    }, query)
+  app.post('/get_reply', async (req, res) => {
+    query = req.body.query
+
+    input_field = await page.waitForSelector('#user-input')
+    await input_field.type(query)
+  
+    await page.waitForSelector('#send-btn-icon')
+    await page.click('#send-btn-icon')
+
+
+  
   })
+
+  app.listen(3002, () => {})
 
   await page.waitForTimeout(3000)
 
