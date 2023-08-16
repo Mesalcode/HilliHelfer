@@ -3,9 +3,9 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-import thorsten
+import speech_server
 
-thorsten.say("Guten Morgen! Ich bin dein Assistent. Brauchst du mit etwas Hilfe? Sag einfach Bescheid!")
+speech_server.say("Guten Morgen! Ich bin dein Assistent. Brauchst du mit etwas Hilfe? Sag einfach Bescheid!")
 
 import voice_recognition
 

@@ -3,6 +3,9 @@ const puppeteer = require('puppeteer-extra');
 
 const pluginStealth = require('puppeteer-extra-plugin-stealth') 
 const {executablePath} = require('puppeteer'); 
+
+const express = require('express');
+const app = express();
  
 // Use stealth 
 puppeteer.use(pluginStealth()) 
@@ -63,7 +66,7 @@ const preparePageForTests = async (page) => {
   // Launch the browser in headless mode and set up a page.
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--use-fake-ui-for-media-stream'],
-    headless: false,
+    headless: 'new',
   });
   const page = await browser.newPage();
 
@@ -88,7 +91,96 @@ const preparePageForTests = async (page) => {
   await page.waitForSelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
   await page.click('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
 
-  await page.waitForTimeout(1000000)
+  await page.waitForTimeout(2000)
+
+  console.log("Sprachserver online. Warte auf Interaktion..")
+
+  app.get('/status', (req, res) => res.send('Up!'))
+
+  let previousText = '';
+  let iterationsSinceLastChange = 0;
+
+  let recognizedSentence = null;
+
+  app.get('/sentence', (req, res) => {
+    res.send(recognizedSentence)
+    recognizedSentence = null;
+  }
+  )
+
+  app.listen(3000, () => {})
+
+  while(true) {
+    const {text, reenabled} = await page.evaluate(async () => {
+      let activate_button = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > span > svg')
+      let main_button_element = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
+
+      let reenabled = false;
+
+      if (!(activate_button?.getAttribute('enable-background'))) {
+        main_button_element.click()
+        reenabled = true;
+      }
+
+      if (reenabled) {
+        await new Promise(resolve => setTimeout(resolve, 200))
+      }
+
+      let content = null
+
+      while(true) {    
+        content = document.querySelector('[aria-label="Source text"]').nextElementSibling.innerHTML;
+
+        if (content == null) {
+          await new Promise(resolve => setTimeout(resolve, 100))
+        } else {
+          break;
+        }
+      }
+
+      return {
+        'text': content,
+        'reenabled': reenabled
+      }
+    })
+
+    await page.waitForTimeout(100)
+
+    const textChanged = text !== previousText
+    previousText = text
+
+    if (textChanged) {
+      iterationsSinceLastChange = 0;
+
+      continue;
+    }
+
+    if (iterationsSinceLastChange >= 20 && text.length > 0) {
+      console.log(text)
+
+      await page.evaluate(() => {
+
+        let main_button_element = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
+        
+        //console.log(main_button_element)  
+
+        main_button_element.click()
+
+        const escapeHTMLPolicy = trustedTypes.createPolicy("forceInner", {createHTML: (to_escape) => to_escape})
+
+        document.querySelector('[aria-label="Source text"]').nextElementSibling.innerHTML = escapeHTMLPolicy.createHTML("");
+
+      })
+
+      iterationsSinceLastChange = 0
+      previousText = '';
+      recognizedSentence = text
+
+      continue
+    }
+
+    iterationsSinceLastChange += 1
+  }
 
   // Clean up.
   await browser.close()
