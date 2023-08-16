@@ -32,6 +32,8 @@ const {executablePath} = require('puppeteer');
   await page.waitForSelector('#mobile-app-modal-close')
   await page.click('#mobile-app-modal-close')
 
+  await page.waitForTimeout(3000)
+
   await page.evaluate(() => {
     document.getElementById("#AcceptButton").click()
   })
@@ -46,6 +48,8 @@ const {executablePath} = require('puppeteer');
   userInput = await page.waitForSelector('#username')
   await userInput.type('botmusic79@gmail.com')
 
+  await page.waitForTimeout(3000)
+
   passInput = await page.waitForSelector('#password')
   await passInput.type('HilliHelfer123')
 
@@ -53,6 +57,8 @@ const {executablePath} = require('puppeteer');
   await page.click('body > div > main > section > div > div > div > form > div.c22fea258 > button')
 
   await page.waitForNavigation()
+
+    await page.waitForTimeout(3000)
 
   //await preparePageForTests(page)
 
