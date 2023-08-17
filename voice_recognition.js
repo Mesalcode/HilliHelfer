@@ -163,10 +163,6 @@ const preparePageForTests = async (page) => {
       continue;
     }
 
-    console.log("Ich bin an.")
-    console.log(temperature)
-    console.log(humidity)
-
     const {text, reenabled} = await page.evaluate(async () => {
       let activate_button = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > span > svg')
       let main_button_element = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > div.VfPpkd-Bz112c-RLmnJb')
