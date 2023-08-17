@@ -15,6 +15,15 @@ while True:
     temperature = float(line_split[1][:-7])
     print(f"temp: {temperature} humid: {humidity}")
 
-    requests.get(f'http://localhost:3000/set_env?humid={humidity}&temp={temperature}')
+    response_text = requests.get(f'http://localhost:3000/set_env?humid={humidity}&temp={temperature}').text
+    response_text_split = response_text.split(' ')
+
+    if len(response_text_split) != 2:
+        continue
+
+    lightEnabled = not not int(response_text_split[0])
+    fanEnabled = not not int(response_text_split[1])
+
+    ser.write(f'{lightEnabled}{fanEnabled}\r'.encode())
 
 ser.close()

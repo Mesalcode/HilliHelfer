@@ -36,7 +36,7 @@ app.use(express.json()) ;
                         console.log(_)
                     }
 
-                    await new Promise(resolve => setTimeout(resolve, 3000))
+                    await new Promise(resolve => setTimeout(resolve, 1000))
                 }
 
                 return res.send('Entschuldige. Das habe ich nicht verstanden.')

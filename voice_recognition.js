@@ -10,6 +10,15 @@ const {executablePath} = require('puppeteer');
 
 const express = require('express');
 const app = express();
+app.use(express.json())
+const cors=require("cors");
+const corsOptions ={
+   origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
+
+app.use(cors(corsOptions)) // Use this after the variable declaration
  
 // Use stealth 
 puppeteer.use(pluginStealth()) 
@@ -142,13 +151,43 @@ const preparePageForTests = async (page) => {
     res.send('')
   })
 
+  let lightEnabled = false;
+  let fanEnabled = false;
+
+  app.get('/enable_light', (req, res) => {
+    lightEnabled = true;
+
+    res.send('')
+  })
+
+  app.get('/disable_light', (req, res) => {
+    lightEnabled = false;
+
+    res.send('')
+  })
+
+  app.get('/enable_fan', (req, res) => {
+    fanEnabled = true;
+
+    res.send('')
+  })
+
+  app.get('/disable_fan', (req, res) => {
+    fanEnabled = false;
+
+    res.send('')
+  })
+
   app.get('/set_env', (req, res) => {
     console.log(req.query)
 
     temperature = Number(req.query.temp)
     humidity = Number(req.query.humid)
 
-    res.send('')
+    const lightValue = + lightEnabled;
+    const fanValue = + fanEnabled;
+
+    res.send(lightValue.toString() + ' ' + fanValue.toString())
   })
 
   app.get('/get_env', (req, res) => {
@@ -156,6 +195,36 @@ const preparePageForTests = async (page) => {
       'temperature': temperature,
       'humidity': humidity
     })
+  })
+
+  let bubble_text = '';
+
+  app.post('/set_bubble_text', async (req, res) => {
+    bubble_text = req.body.text;
+
+    res.send('')
+  });
+
+  let thinkingBubble = false;
+
+  app.get('/get_bubble_text', async (req, res) => {
+    if (thinkingBubble) {
+      console.log("Thinking bubble")
+      res.send('');
+      return;
+    }
+    res.send(bubble_text);
+  })
+
+  app.get('/enable_thinking_bubble', async (req, res) => {
+    console.log("thinking buble enabled")
+    thinkingBubble = true;
+    res.send('');
+  })
+
+  app.get('/disable_thinking_bubble', async (req, res) => {
+    thinkingBubble = false;
+    res.send('');
   })
 
   app.listen(3000, () => {})

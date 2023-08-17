@@ -9,9 +9,8 @@ print("2")
 import requests
 print("3")
 
-reply_server_url = "https://calm-flies-appear.loca.lt"
-speech_server_url = "https://calm-flies-appear.loca.lt"
-communication_server_url = "http://localhost"
+speech_server_url = "http://localhost:3000"
+communication_server_url = "http://localhost:3002"
 
 tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC")
 
@@ -19,8 +18,10 @@ tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC")
 print("test")
 
 def say(text, notify_others=False):
-    text.replace("\"", "")
-    text.replace("'", "")
+    clean_text = text
+
+    text = text.replace("\"", "")
+    text = text.replace("'", "")
 
     if notify_others:
         requests.get(f'{speech_server_url}/pause')
@@ -36,6 +37,8 @@ def say(text, notify_others=False):
     sentences = re.split('(?<=[\.\?\!\:\,])\s*', text)
     sentences = [sentence for sentence in sentences if len(sentence) >= 2]
 
+    text = ' '.join(sentences)
+
     printed_delay = False
 
     for sentence in sentences:
@@ -45,7 +48,8 @@ def say(text, notify_others=False):
 
         if not printed_delay:
             #print(f"{time.time() - start}s Verzögerung bis zur Antwort.")
-
+            requests.post(f'{speech_server_url}/set_bubble_text', json={'text': clean_text})
+            requests.get(f'{speech_server_url}/disable_thinking_bubble')
             printed_delay = True
             
         sounddevice.play(wav, 22050)
@@ -55,9 +59,9 @@ def say(text, notify_others=False):
     if notify_others:
         requests.get(f'{speech_server_url}/unpause')
 
-say("Alle Systeme werden vor dem Start überprüft. Bitte haben Sie etwas Geduld.")
+#say("Alle Systeme werden vor dem Start überprüft. Bitte haben Sie etwas Geduld.")
 
-say("Sprachausgabedienst bereit für den Einsatz.")
+#say("Sprachausgabedienst bereit für den Einsatz.")
 
 while True:
     try:
@@ -74,11 +78,11 @@ while True:
         print(e)
         say("Warte auf Spracherkennungsdienst")
 
-say("Spracherkennungsdienst bereit für den Einsatz.")
+#say("Spracherkennungsdienst bereit für den Einsatz.")
 
 while True:
     try:
-        status = requests.get(f'{communication_server_url}:3002/status').status_code
+        status = requests.get(f'{communication_server_url}/status').status_code
         
         if status == 200:
             break   
@@ -88,13 +92,15 @@ while True:
     except:
         say("Warte auf Kommunikationsdienst")
 
-say("Kommunikationsdienst bereit für den Einsatz.")
+#say("Kommunikationsdienst bereit für den Einsatz.")
 
-say("Starte Hilli punkt echse")
+#say("Starte Hilli punkt echse")
 
-time.sleep(5)
+#time.sleep(5)
 
-say("Guten Tag! Ich bin Thomas Hillebrand, Gymnasiallehrer aus dem steinreichen Lindlar und freue mich mit dir zu reden.")
+say("Guten Tag! Ich bin Thomas Hillebrand, Gymnasiallehrer aus dem steinreichen Lindlar und freue mich mit dir zu reden.", notify_others=True)
+
+DEBUG_MODE = True
 
 while True:
     try:
@@ -102,7 +108,10 @@ while True:
 
         print("sending request")
 
-        sentence = requests.get(f'{speech_server_url}/sentence').text
+        if DEBUG_MODE: 
+            sentence = input("Eingabe: ")
+        else:
+            sentence = requests.get(f'{speech_server_url}/sentence').text
         sentence_trimmed = sentence.strip()
 
         print(sentence)
@@ -126,13 +135,20 @@ while True:
             continue
 
         print(f"Looking for response to {trimmed_thomas_sentence}")
+        requests.get(f'{speech_server_url}/enable_thinking_bubble')
 
-        reply = requests.post('{communication_server_url}:3002/get_response', json={'query': trimmed_thomas_sentence}).text
+        reply = requests.post(f'{communication_server_url}/get_response', json={'query': trimmed_thomas_sentence}).text
 
         environment_values = requests.get(f'{speech_server_url}/get_env').json()
 
-        reply.replace("%humid%", environment_values['humidity'])
-        reply.replace("temp%", environment_values['temperature'])
+        reply = reply.replace("%humid%", str(environment_values['humidity']).replace('.', ' komma '))
+        reply = reply.replace("%temp%", str(environment_values['temperature']).replace('.', ' komma '))
+
+        reply = reply.replace('%lighton%', '🔋')
+        reply = reply.replace('%lightoff%', '🪫')
+
+        reply = reply.replace('%fanon%', '🔋')
+        reply = reply.replace('%fanoff%', '🪫')
 
         #print(environment_values)
 
