@@ -70,7 +70,7 @@ const preparePageForTests = async (page) => {
   // Launch the browser in headless mode and set up a page.
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--use-fake-ui-for-media-stream'],
-    headless: false,
+    headless: 'new',
   });
   const page = await browser.newPage();
   
@@ -135,6 +135,8 @@ const preparePageForTests = async (page) => {
 
   app.get('/unpause', (req, res) => {
     paused = false;
+
+    res.send('')
   })
 
   app.listen(3000, () => {})
