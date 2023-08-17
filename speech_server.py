@@ -156,7 +156,7 @@ while True:
     except Exception as e:
         print(e)
 
-        say("Der Spracherkennungsdienst ist nicht mehr erreichbar. Fahre herunter.")
+        say("Ein kritischer Fehler ist aufgetreten. Fahre herunter.")
         exit(1)
 
 # TODO: Spracherkennung sendet Hardware signal für lampe
