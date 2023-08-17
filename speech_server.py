@@ -9,13 +9,16 @@ print("2")
 import requests
 print("3")
 
-tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", progress_bar=False, gpu=False)
+tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC")
 
 print("test")
 
 def say(text, notify_others=False):
+    text.replace("\"", "")
+    text.replace("'", "")
+
     if notify_others:
-        requests.get('http://localhost:3000/pause')
+        requests.get('https://calm-flies-appear.loca.lt/pause')
 
     start = time.time()
 
@@ -45,7 +48,7 @@ def say(text, notify_others=False):
     sounddevice.wait()
 
     if notify_others:
-        requests.get('http://localhost:3000/unpause')
+        requests.get('https://calm-flies-appear.loca.lt/unpause')
 
 say("Alle Systeme werden vor dem Start überprüft. Bitte haben Sie etwas Geduld.")
 
@@ -53,14 +56,17 @@ say("Sprachausgabedienst bereit für den Einsatz.")
 
 while True:
     try:
-        status = requests.get('http://localhost:3000/status').status_code
+        status = requests.get('https://calm-flies-appear.loca.lt/status').status_code
         
         if status == 200:
             break   
 
+        print(status)
+
         say("Der Spracherkennungsdienst ist nicht mehr erreichbar. Fahre herunter.")
         exit(1)
-    except:
+    except Exception as e:
+        print(e)
         say("Warte auf Spracherkennungsdienst")
 
 say("Spracherkennungsdienst bereit für den Einsatz.")
@@ -91,7 +97,7 @@ while True:
 
         print("sending request")
 
-        sentence = requests.get('http://localhost:3000/sentence').text
+        sentence = requests.get('https://calm-flies-appear.loca.lt/sentence').text
         sentence_trimmed = sentence.strip()
 
         print(sentence)
