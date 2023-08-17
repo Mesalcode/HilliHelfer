@@ -114,6 +114,9 @@ const preparePageForTests = async (page) => {
   let recognizedSentence = null;
   let paused = false;
 
+  let temperature = 0;
+  let humidity = 0;
+
   app.get('/sentence', (req, res) => {
     res.send(recognizedSentence)
     recognizedSentence = null;
@@ -139,6 +142,16 @@ const preparePageForTests = async (page) => {
     res.send('')
   })
 
+  app.get('/set_env', (req, res) => {
+    temperatur = Number(req.query.temp)
+    humidity = Number(req.query.humidity)
+
+    print(temperature)
+    print(humidity)
+
+    res.send('')
+  })
+
   app.listen(3000, () => {})
 
   while(true) {
@@ -149,6 +162,8 @@ const preparePageForTests = async (page) => {
     }
 
     console.log("Ich bin an.")
+    print(temperature)
+    print(humidity)
 
     const {text, reenabled} = await page.evaluate(async () => {
       let activate_button = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > span > svg')
