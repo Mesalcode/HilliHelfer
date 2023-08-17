@@ -127,7 +127,7 @@ while True:
 
         print(f"Looking for response to {trimmed_thomas_sentence}")
 
-        reply = requests.post('{communication_server_url}:3002/get_response', json={'query': trimmed_thomas_sentence}).text
+        reply = requests.post('f{communication_server_url}:3002/get_response', json={'query': trimmed_thomas_sentence}).text
 
         environment_values = requests.get(f'{speech_server_url}/get_env').json()
 
