@@ -9,7 +9,12 @@ print("2")
 import requests
 print("3")
 
+reply_server_url = "https://calm-flies-appear.loca.lt"
+speech_server_url = "https://calm-flies-appear.loca.lt"
+communication_server_url = "http://localhost"
+
 tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC")
+
 
 print("test")
 
@@ -18,7 +23,7 @@ def say(text, notify_others=False):
     text.replace("'", "")
 
     if notify_others:
-        requests.get('https://calm-flies-appear.loca.lt/pause')
+        requests.get(f'{speech_server_url}/pause')
 
     start = time.time()
 
@@ -48,7 +53,7 @@ def say(text, notify_others=False):
     sounddevice.wait()
 
     if notify_others:
-        requests.get('https://calm-flies-appear.loca.lt/unpause')
+        requests.get(f'{speech_server_url}/unpause')
 
 say("Alle Systeme werden vor dem Start überprüft. Bitte haben Sie etwas Geduld.")
 
@@ -56,7 +61,7 @@ say("Sprachausgabedienst bereit für den Einsatz.")
 
 while True:
     try:
-        status = requests.get('https://calm-flies-appear.loca.lt/status').status_code
+        status = requests.get(f'{speech_server_url}/status').status_code
         
         if status == 200:
             break   
@@ -73,7 +78,7 @@ say("Spracherkennungsdienst bereit für den Einsatz.")
 
 while True:
     try:
-        status = requests.get('http://localhost:3002/status').status_code
+        status = requests.get(f'{communication_server_url}:3002/status').status_code
         
         if status == 200:
             break   
@@ -97,7 +102,7 @@ while True:
 
         print("sending request")
 
-        sentence = requests.get('https://calm-flies-appear.loca.lt/sentence').text
+        sentence = requests.get(f'{speech_server_url}/sentence').text
         sentence_trimmed = sentence.strip()
 
         print(sentence)
@@ -122,7 +127,11 @@ while True:
 
         print(f"Looking for response to {trimmed_thomas_sentence}")
 
-        reply = requests.post('http://localhost:3002/get_response', json={'query': trimmed_thomas_sentence}).text
+        reply = requests.post('{communication_server_url}:3002/get_response', json={'query': trimmed_thomas_sentence}).text
+
+        environment_values = requests.get(f'{speech_server_url}/get_env')
+
+        print(environment_values)
 
         say(reply, notify_others=True)
     except Exception as e:
