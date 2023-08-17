@@ -3,7 +3,7 @@ import serial
 ser = serial.Serial('COM4', 9600, timeout=1)
 
 while True:
-    line = ser.readline()
+    line = str(ser.readline())
 
     line_split = line.split(' ')
 
