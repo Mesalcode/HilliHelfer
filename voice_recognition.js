@@ -143,7 +143,7 @@ const preparePageForTests = async (page) => {
   })
 
   app.get('/set_env', (req, res) => {
-    console.log(query)
+    console.log(req.query)
 
     temperature = Number(req.query.temp)
     humidity = Number(req.query.humidity)
