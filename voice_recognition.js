@@ -146,8 +146,8 @@ const preparePageForTests = async (page) => {
     temperatur = Number(req.query.temp)
     humidity = Number(req.query.humidity)
 
-    print(temperature)
-    print(humidity)
+    console.log(temperature)
+    console.log(humidity)
 
     res.send('')
   })
@@ -162,8 +162,8 @@ const preparePageForTests = async (page) => {
     }
 
     console.log("Ich bin an.")
-    print(temperature)
-    print(humidity)
+    console.log(temperature)
+    console.log(humidity)
 
     const {text, reenabled} = await page.evaluate(async () => {
       let activate_button = document.querySelector('#yDmH0d > c-wiz > div > div.ToWKne > c-wiz > div.OlSOob > c-wiz > div > div.AxqVh > div.OPPzxe > c-wiz.rm1UF.UnxENd > div.FFpbKc > div:nth-child(1) > c-wiz > span.jNeWz > div:nth-child(2) > div:nth-child(1) > span > button > span > svg')
