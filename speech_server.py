@@ -129,9 +129,12 @@ while True:
 
         reply = requests.post('{communication_server_url}:3002/get_response', json={'query': trimmed_thomas_sentence}).text
 
-        environment_values = requests.get(f'{speech_server_url}/get_env')
+        environment_values = requests.get(f'{speech_server_url}/get_env').json()
 
-        print(environment_values)
+        reply.replace("%humid%", environment_values['humidity'])
+        reply.replace("temp%", environment_values['temperature'])
+
+        #print(environment_values)
 
         say(reply, notify_others=True)
     except Exception as e:
