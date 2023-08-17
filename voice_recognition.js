@@ -146,7 +146,7 @@ const preparePageForTests = async (page) => {
     console.log(req.query)
 
     temperature = Number(req.query.temp)
-    humidity = Number(req.query.humidity)
+    humidity = Number(req.query.humid)
 
     console.log(temperature)
     console.log(humidity)
