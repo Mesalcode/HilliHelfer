@@ -6,3 +6,5 @@ while True:
     line = ser.readline()
 
     print(line)
+
+ser.close()
