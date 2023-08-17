@@ -11,7 +11,7 @@ while True:
         continue
 
     temperature = float(line_split[0][2:])
-    humidity = float(line_split[1][:-2])
+    humidity = float(line_split[1][:-7])
     print(f"temp: {temperature} humid: {humidity}")
 
 ser.close()
