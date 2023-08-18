@@ -21,6 +21,8 @@ while True:
     if len(response_text_split) != 2:
         continue
 
+    print(response_text_split)
+
     lightEnabled = not not int(response_text_split[0])
     fanEnabled = not not int(response_text_split[1])
 
