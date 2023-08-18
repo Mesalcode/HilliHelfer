@@ -11,8 +11,11 @@ while True:
     if len(line_split) != 2:
         continue
 
-    humidity = float(line_split[0][2:])
-    temperature = float(line_split[1][:-7])
+    try:
+        humidity = float(line_split[0][2:])
+        temperature = float(line_split[1][:-7])
+    except:
+        continue
     print(f"temp: {temperature} humid: {humidity}")
 
     response_text = requests.get(f'http://localhost:3000/set_env?humid={humidity}&temp={temperature}').text
