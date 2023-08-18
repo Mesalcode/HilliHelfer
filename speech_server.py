@@ -144,21 +144,21 @@ while True:
         reply = reply.replace("%humid%", str(environment_values['humidity']).replace('.', ' komma '))
         reply = reply.replace("%temp%", str(environment_values['temperature']).replace('.', ' komma '))
 
-        if ('%lighton%' in reply) {
+        if ('%lighton%' in reply):
             requests.get(f'{speech_server_url}/enable_light')
-        }
+        
 
-        if ('%lightoff%' in reply) {
+        if ('%lightoff%' in reply):
             requests.get(f'{speech_server_url}/disable_light')
-        }
+        
 
-        if ('%fanon%' in reply) {
+        if ('%fanon%' in reply):
             requests.get(f'{speech_server_url}/enable_fan')
-        }
+        
 
-        if ('%fanoff%' in reply) {
+        if ('%fanoff%' in reply):
             requests.get(f'{speech_server_url}/disable_fan')
-        }
+        
 
         reply = reply.replace('%lighton%', '🔋')
         reply = reply.replace('%lightoff%', '🪫')
