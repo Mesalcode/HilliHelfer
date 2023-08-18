@@ -24,6 +24,8 @@ while True:
     lightEnabled = not not int(response_text_split[0])
     fanEnabled = not not int(response_text_split[1])
 
+    print((lightEnabled, fanEnabled))
+
     ser.write(f'{lightEnabled}{fanEnabled}\r'.encode())
 
 ser.close()
