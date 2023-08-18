@@ -161,10 +161,10 @@ while True:
         
 
         reply = reply.replace('%lighton%', '🔋')
-        reply = reply.replace('%lightoff%', '🪫')
+        reply = reply.replace('%lightoff%', '⛔')
 
         reply = reply.replace('%fanon%', '🔋')
-        reply = reply.replace('%fanoff%', '🪫')
+        reply = reply.replace('%fanoff%', '⛔')
 
         #print(environment_values)
 
