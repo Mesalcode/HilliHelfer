@@ -9,7 +9,7 @@ print("2")
 import requests
 print("3")
 
-speech_server_url = "http://localhost:3000"
+speech_server_url = "https://rnnqc-80-153-191-202.a.free.pinggy.online"
 communication_server_url = "http://localhost:3002"
 
 tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC")
@@ -100,7 +100,7 @@ while True:
 
 say("Guten Tag! Ich bin Thomas Hillebrand, Gymnasiallehrer aus dem steinreichen Lindlar und freue mich mit dir zu reden.", notify_others=True)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 while True:
     try:
